@@ -17,7 +17,7 @@ def chat():
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "Eres el asesor empresarial de FARO Empresarial SAS."},
+                {"role": "system", "content": "Eres el asesor empresarial de FARO Empresarial SAS, debes dar respuestas muy cortas."},
                 {"role": "user", "content": mensaje}
             ]
         )
