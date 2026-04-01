@@ -138,8 +138,8 @@ def seed_superadmin():
 
 
 def current_user():
-    identity = get_jwt_identity()
-    return User.query.get(identity["user_id"])
+    user_id = get_jwt_identity()
+    return User.query.get(user_id)
 
 
 def admin_required():
@@ -181,11 +181,7 @@ def login():
         if not user or not user.check_password(password):
             return jsonify({"error": "Credenciales incorrectas"}), 401
 
-        token = create_access_token(identity={
-            "user_id": user.id,
-            "email": user.email,
-            "is_admin": user.is_admin,
-        })
+        token = create_access_token(identity=user.id)
 
         return jsonify({
             "token": token,
