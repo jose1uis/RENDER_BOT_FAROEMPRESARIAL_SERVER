@@ -32,11 +32,14 @@ frontend_origins = os.getenv(
     "http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:8000,http://localhost:8000",
 ).split(",")
 
-CORS(
-    app,
-    resources={r"/api/*": {"origins": frontend_origins}},
-    supports_credentials=False,
-)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "https://faroempresarial.co",
+            "https://www.faroempresarial.co"
+        ]
+    }
+})
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
