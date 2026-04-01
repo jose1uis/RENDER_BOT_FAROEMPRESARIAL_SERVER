@@ -48,11 +48,7 @@ allowed_origins = os.getenv(
     "http://localhost:5500,http://127.0.0.1:5500,https://faroempresarial.co,https://www.faroempresarial.co"
 ).split(",")
 
-CORS(app, resources={
-    r"/api/*": {
-        "origins": allowed_origins
-    }
-})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # -------------------------
 # DB + JWT + OpenAI
