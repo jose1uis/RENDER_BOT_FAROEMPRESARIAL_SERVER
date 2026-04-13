@@ -27,16 +27,16 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "cambia-esto-en-render")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=12)
 
-#frontend_origins = os.getenv(
-#    "FRONTEND_ORIGINS",
-#    "http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:8000,http://localhost:8000",
-#).split(",")
+frontend_origins = os.getenv(
+    "FRONTEND_ORIGINS",
+    "http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:8000,http://localhost:8000",
+).split(",")
 
-#CORS(
-#    app,
-#    resources={r"/api/*": {"origins": frontend_origins}},
-#    supports_credentials=False,
-#)
+CORS(
+    app,
+    resources={r"/api/*": {"origins": frontend_origins}},
+    supports_credentials=False,
+)
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -128,7 +128,12 @@ def seed_superadmin() -> None:
 
 def current_user():
     identity = get_jwt_identity()
-    return User.query.get(identity["user_id"])
+    # identity puede venir como string, convertir a int para la consulta
+    try:
+        user_id = int(identity)
+    except Exception:
+        user_id = None
+    return User.query.get(user_id)
 
 
 def admin_required():
@@ -174,8 +179,8 @@ def login():
             return jsonify({"error": "Credenciales incorrectas"}), 401
 
         token = create_access_token(
-            identity={
-                "user_id": user.id,
+            identity=str(user.id),
+            additional_claims={
                 "email": user.email,
                 "is_admin": user.is_admin,
             }
