@@ -266,18 +266,29 @@ def update_content(key: str):
 # -------------------------
 # Admin users
 # -------------------------
+from flask import send_file
+import os
+
 @app.get("/api/video/<int:video_id>")
 @jwt_required()
 def get_video(video_id):
     try:
-        video_path = os.path.join("videos", f"video{video_id}.mp4")
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        video_path = os.path.join(BASE_DIR, "videos", f"video{video_id}.mp4")
+
+        print("BUSCANDO:", video_path)
+        print("EXISTE:", os.path.exists(video_path))
 
         if not os.path.exists(video_path):
-            return jsonify({"error": "Video no encontrado"}), 404
+            return jsonify({
+                "error": "Video no encontrado",
+                "ruta": video_path
+            }), 404
 
         return send_file(video_path, mimetype="video/mp4")
 
     except Exception as e:
+        print("ERROR:", str(e))
         return jsonify({"error": str(e)}), 500
 
 
