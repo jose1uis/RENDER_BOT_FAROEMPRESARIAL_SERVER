@@ -266,6 +266,22 @@ def update_content(key: str):
 # -------------------------
 # Admin users
 # -------------------------
+@app.get("/api/video/<int:video_id>")
+@jwt_required()
+def get_video(video_id):
+    try:
+        video_path = os.path.join("videos", f"video{video_id}.mp4")
+
+        if not os.path.exists(video_path):
+            return jsonify({"error": "Video no encontrado"}), 404
+
+        return send_file(video_path, mimetype="video/mp4")
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 @app.get("/api/admin/users")
 @jwt_required()
 def list_users():
