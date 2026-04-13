@@ -1,6 +1,8 @@
 import os
 from datetime import timedelta
 
+CORS(app, origins=["https://faroempresarial.co"])
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
